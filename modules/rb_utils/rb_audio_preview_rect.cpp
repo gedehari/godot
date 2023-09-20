@@ -55,14 +55,16 @@ void RBAudioPreviewRect::_draw_preview() {
 		float min = preview->get_min(ofs, ofs_n) * 0.5 + 0.5;
 
 		int idx = i;
-		points.write[idx * 2 + 0] = Vector2(i + 1, rect.position.y + min * rect.size.y);
-		points.write[idx * 2 + 1] = Vector2(i + 1, rect.position.y + max * rect.size.y);
+		points.write[idx * 2 + 0] = Vector2(i + 1, min * rect.size.y);
+		points.write[idx * 2 + 1] = Vector2(i + 1, max * rect.size.y);
 
 		colors.write[idx] = waveform_color;
 	}
 
-	if (!points.is_empty()) {
-		RS::get_singleton()->canvas_item_add_multiline(get_canvas_item(), points, colors);
+	if (points.is_empty()) {
+		queue_redraw();
+	} else {
+		draw_multiline(points, waveform_color);
 	}
 }
 
